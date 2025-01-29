@@ -1,37 +1,39 @@
-name: Deploy Blogging Website
+name: Deploy to Development
 
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pages: write
       id-token: write  # Required for deploy-pages action
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
       - name: Install Dependencies
-        run: npm install
+        run: npm install parcel
 
       - name: Build Project
         run: npx parcel build src/index.html
 
-      - name: Upload artifact for Pages
+      - name: Upload Artifact for Pages
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./dist
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
