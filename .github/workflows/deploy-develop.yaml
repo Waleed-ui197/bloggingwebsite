@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: read
       pages: write
-      id-token: write  # Required for deploy-pages action
+      id-token: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -23,8 +23,9 @@ jobs:
         run: npx parcel build src/index.html
 
       - name: Upload Artifact for Pages
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
+          name: github-pages
           path: ./dist
 
   deploy:
